@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WTW Calidad | Instrucciones de uso</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <section class="screen start-screen" data-screen="start">
+        <button class="ghost-button start-back-button" data-back>Volver</button>
+        <main class="start-layout">
+          <div class="brand-panel">
+            <img class="project-logo" src="WtW%20Calidad.jpg" alt="Logotipo del proyecto WTW Calidad" />
+            <p class="app-kicker">Proyecto de Innovación Didáctica</p>
+            <h1>Instrucciones de uso de la cabina didáctica de soldadura</h1>
+            <p class="app-summary">Uso exclusivo por profesorado autorizado del centro.</p>
+            <button class="primary-action" data-go="menu">Empezar</button>
+          </div>
+          <footer class="start-footer">
+            <img class="school-logo" src="Logotipo%20Guarnizo%202.bmp" alt="Logotipo IES Nuestra Señora de los Remedios" />
+            <div>
+              <strong>IES Nuestra Señora de los Remedios</strong>
+              <span>Versión inicial editable · Mayo 2026</span>
+            </div>
+          </footer>
+        </main>
+      </section>
+
+      <section class="screen hidden" data-screen="menu">
+        <header class="topbar">
+          <button class="ghost-button" data-back>Volver</button>
+          <div class="topbar-title">
+            <span>WTW Calidad</span>
+            <strong>Menú principal</strong>
+          </div>
+          <div class="top-actions"><a class="print-button" href="imprimir.html" target="_blank">Imprimir PDF</a><button class="danger-button" data-section="incidencias">Incidencia</button></div>
+        </header>
+
+        <main class="menu-layout">
+          <!-- Banner de Aviso de Seguridad -->
+          <div class="safety-banner">
+            <span class="safety-banner-icon">⚠️</span>
+            <div class="safety-banner-content">
+              <strong>Aviso de seguridad obligatorio</strong>
+              <span>Es indispensable leer y conocer las normas de prevención de riesgos antes de operar la cabina.</span>
+            </div>
+            <button class="safety-banner-action" data-menu-open="prevencion">Ver Prevención</button>
+          </div>
+
+          <section class="menu-grid" id="menuGrid"></section>
+        </main>
+      </section>
+
+      <section class="screen hidden" data-screen="section">
+        <header class="topbar">
+          <button class="ghost-button" data-back>Volver</button>
+          <div class="topbar-title">
+            <span>WTW Calidad</span>
+            <strong id="sectionTitle">Apartado</strong>
+          </div>
+          <div class="top-actions"><a class="print-button" href="imprimir.html" target="_blank">Imprimir PDF</a><button class="danger-button" data-section="incidencias">Incidencia</button></div>
+        </header>
+
+        <main class="section-layout">
+          <aside class="section-nav" id="sectionNav"></aside>
+          <article class="content-panel">
+            <div class="section-hero" id="sectionHero"></div>
+            <div class="content-columns" id="sectionContent"></div>
+          </article>
+        </main>
+      </section>
+    </div>
+    
+    <!-- Lightbox Modal para Zoom de Imágenes -->
+    <div id="imageLightbox" class="lightbox-modal">
+      <span class="lightbox-close">&times;</span>
+      <img class="lightbox-content" id="lightboxImage" alt="Imagen ampliada" />
+      <div id="lightboxCaption" class="lightbox-caption"></div>
+    </div>
+
+    <script src="content.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

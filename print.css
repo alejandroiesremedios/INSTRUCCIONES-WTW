@@ -1,0 +1,293 @@
+﻿:root {
+  --ink: #17212b;
+  --muted: #5f6e7a;
+  --line: #d7dee4;
+  --project: #176b73;
+  --danger: #b42318;
+  --paper: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #eef2f1;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.print-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 18px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--line);
+}
+
+.print-toolbar a,
+.print-toolbar button {
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.print-toolbar a {
+  color: var(--project);
+  background: #e4efed;
+}
+
+.print-toolbar button {
+  color: white;
+  background: var(--project);
+}
+
+.document {
+  width: min(980px, calc(100% - 32px));
+  margin: 24px auto;
+  background: var(--paper);
+  box-shadow: 0 20px 60px rgba(23, 33, 43, 0.16);
+}
+
+.cover {
+  min-height: 920px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 18px;
+  padding: 56px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-logo {
+  width: min(560px, 100%);
+  max-height: 320px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.kicker {
+  margin: 10px 0 0;
+  color: var(--project);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: 3rem;
+  line-height: 1.08;
+}
+
+.lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.cover-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 38px;
+  color: var(--muted);
+  text-align: left;
+}
+
+.cover-footer img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.cover-footer div {
+  display: grid;
+  gap: 3px;
+}
+
+.toc,
+.print-section {
+  padding: 42px 56px;
+  border-bottom: 1px solid var(--line);
+}
+
+.toc h2,
+.print-section h2 {
+  margin: 0 0 16px;
+  font-size: 2rem;
+}
+
+.toc ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 24px;
+  font-size: 1.05rem;
+}
+
+.print-section {
+  break-inside: avoid;
+}
+
+.print-section header {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 22px;
+}
+
+.print-section header > span {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  color: white;
+  background: var(--project);
+  border-radius: 8px;
+  font-weight: 900;
+}
+
+.print-section header p {
+  margin: 0 0 4px;
+  color: var(--project);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.print-section header h2 {
+  margin-bottom: 4px;
+}
+
+.print-section header small {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.cards {
+  display: grid;
+  gap: 16px;
+}
+
+.print-card {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--project);
+  border-radius: 8px;
+}
+
+.print-card.pending {
+  border-left-color: #b45309;
+  background: #fffaf0;
+}
+
+.print-card h3 {
+  margin: 0 0 12px;
+  font-size: 1.25rem;
+}
+
+.print-card ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 22px;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  body {
+    background: white;
+  }
+
+  .print-toolbar {
+    display: none;
+  }
+
+  .document {
+    width: auto;
+    margin: 0;
+    box-shadow: none;
+  }
+
+  .cover {
+    min-height: calc(297mm - 28mm);
+    page-break-after: always;
+  }
+
+  .toc {
+    page-break-after: always;
+  }
+
+  .print-section {
+    padding: 0 0 12mm;
+    page-break-inside: avoid;
+  }
+}
+
+.print-elements {
+  display: grid;
+  gap: 12px;
+}
+
+.print-element {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  break-inside: avoid;
+}
+
+.print-element h4 {
+  margin: 0 0 8px;
+  color: var(--project);
+  font-size: 1.08rem;
+}
+
+.print-element p {
+  margin: 0 0 7px;
+}
+
+.print-photo-note {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.print-element-photo {
+  margin: 10px 0 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7f9f9;
+}
+
+.print-element-photo img {
+  display: block;
+  width: 100%;
+  max-height: 85mm;
+  object-fit: contain;
+}
+
+.print-element-photo figcaption {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}

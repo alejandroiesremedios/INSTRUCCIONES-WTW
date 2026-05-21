@@ -1,0 +1,41 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WTW Calidad | Versión imprimible</title>
+    <link rel="stylesheet" href="print.css" />
+  </head>
+  <body>
+    <div class="print-toolbar">
+      <a href="index.html">Volver a la app</a>
+      <button onclick="window.print()">Imprimir o guardar en PDF</button>
+    </div>
+
+    <main class="document">
+      <section class="cover">
+        <img class="project-logo" src="WtW%20Calidad.jpg" alt="WTW Calidad" />
+        <p class="kicker">Proyecto de Innovación Didáctica</p>
+        <h1>Instrucciones de uso de la cabina didáctica de soldadura</h1>
+        <p class="lead">Uso exclusivo por profesorado autorizado del centro.</p>
+        <div class="cover-footer">
+          <img src="Logotipo%20Guarnizo%202.bmp" alt="IES Nuestra Señora de los Remedios" />
+          <div>
+            <strong>IES Nuestra Señora de los Remedios</strong>
+            <span>Versión inicial editable · Mayo 2026</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="toc">
+        <h2>Índice</h2>
+        <ol id="tocList"></ol>
+      </section>
+
+      <section id="printContent"></section>
+    </main>
+
+    <script src="content.js"></script>
+    <script src="print.js"></script>
+  </body>
+</html>
