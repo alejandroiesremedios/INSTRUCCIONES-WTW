@@ -3,16 +3,15 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WTW Calidad | Instrucciones de uso</title>
+    <title>WTW Instrucciones | Instrucciones de uso</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div id="app">
       <section class="screen start-screen" data-screen="start">
-        <button class="ghost-button start-back-button" data-back>Volver</button>
         <main class="start-layout">
           <div class="brand-panel">
-            <img class="project-logo" src="WtW%20Calidad.jpg" alt="Logotipo del proyecto WTW Calidad" />
+            <img class="project-logo" src="WtW%20Instrucciones.jpg" alt="Logotipo del proyecto WTW Instrucciones" />
             <p class="app-kicker">Proyecto de Innovación Didáctica</p>
             <h1>Instrucciones de uso de la cabina didáctica de soldadura</h1>
             <p class="app-summary">Uso exclusivo por profesorado autorizado del centro.</p>
@@ -32,8 +31,12 @@
         <header class="topbar">
           <button class="ghost-button" data-back>Volver</button>
           <div class="topbar-title">
-            <span>WTW Calidad</span>
-            <strong>Menú principal</strong>
+            <img class="topbar-logo topbar-logo-school" src="Logotipo%20Guarnizo%202.bmp" alt="" />
+            <div class="topbar-title-text">
+              <span>WTW Instrucciones</span>
+              <strong>Menú principal</strong>
+            </div>
+            <img class="topbar-logo" src="WtW%20Instrucciones.jpg" alt="" />
           </div>
           <div class="top-actions"><a class="print-button" href="imprimir.html" target="_blank">Imprimir PDF</a><button class="danger-button" data-section="incidencias">Incidencia</button></div>
         </header>
@@ -57,18 +60,21 @@
         <header class="topbar">
           <button class="ghost-button" data-back>Volver</button>
           <div class="topbar-title">
-            <span>WTW Calidad</span>
-            <strong id="sectionTitle">Apartado</strong>
+            <img class="topbar-logo topbar-logo-school" src="Logotipo%20Guarnizo%202.bmp" alt="" />
+            <div class="topbar-title-text">
+              <span>WTW Instrucciones</span>
+              <strong id="sectionTitle">Apartado</strong>
+            </div>
+            <img class="topbar-logo" src="WtW%20Instrucciones.jpg" alt="" />
           </div>
           <div class="top-actions"><a class="print-button" href="imprimir.html" target="_blank">Imprimir PDF</a><button class="danger-button" data-section="incidencias">Incidencia</button></div>
         </header>
 
         <main class="section-layout">
-          <aside class="section-nav" id="sectionNav"></aside>
-          <article class="content-panel">
+          <div class="content-panel">
             <div class="section-hero" id="sectionHero"></div>
             <div class="content-columns" id="sectionContent"></div>
-          </article>
+          </div>
         </main>
       </section>
     </div>
@@ -76,7 +82,9 @@
     <!-- Lightbox Modal para Zoom de Imágenes -->
     <div id="imageLightbox" class="lightbox-modal">
       <span class="lightbox-close">&times;</span>
-      <img class="lightbox-content" id="lightboxImage" alt="Imagen ampliada" />
+      <div class="lightbox-frame">
+        <img class="lightbox-content" id="lightboxImage" alt="Imagen ampliada" />
+      </div>
       <div id="lightboxCaption" class="lightbox-caption"></div>
     </div>
 

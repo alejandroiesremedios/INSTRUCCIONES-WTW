@@ -1,10 +1,10 @@
-# Proyecto WTW Calidad
+# Proyecto WTW Instrucciones
 
-Fecha de actualización: 21 de mayo de 2026.
+Fecha de actualización: 24 de mayo de 2026.
 
 ## Qué es
 
-WTW Calidad es una aplicación web local de instrucciones de uso para una cabina didáctica de soldadura del IES Nuestra Señora de los Remedios.
+WTW Instrucciones es una aplicación web local de instrucciones de uso para una cabina didáctica de soldadura del IES Nuestra Señora de los Remedios.
 
 El proyecto forma parte de un proyecto de innovación educativa/didáctica en Cantabria. La app está pensada para uso del profesorado autorizado, no como guía autónoma para alumnado. El alumnado observa principalmente la demostración mediante televisiones y sistema audiovisual, sin aproximarse al punto de soldadura.
 
@@ -17,6 +17,27 @@ La cabina permite realizar demostraciones de soldadura de forma controlada, inte
 - Secciones de prevención, preparación, demostración, apagado, incidencias y documentación pendiente.
 
 ## Cambios realizados
+
+### Sesión 24 mayo 2026
+
+- Logos en `topbar`: logo de Guarnizo a la izquierda y logo WTW a la derecha del título, ambos en pequeño (36 px). El logo deja de aparecer dentro de los apartados (`section-hero`) y del acordeón del menú.
+- Gap entre logos y título ampliado a 56 px.
+- Pantalla de inicio reducida un 10 % (imagen y h1).
+- Flecha del botón "Empezar" sustituida por SVG inline con trazo grueso (`stroke-width: 4`), sombra suave y micro-animación al hover.
+- Avisos `ATENCIÓN` (warning-row) compactados: icono 18 px, padding 6/10, sin animación, sin sombra. Pierden el efecto de bloque y quedan junto a cada texto.
+- Nueva sección "Equipo de soldadura" (id `soldadura`) que sustituye a "Gases" en el menú. Cuatro cards: Gases (con sus avisos), Máquina de soldar, Consumibles, Pantallas de soldadura.
+- Sección "Panel frontal": composición real de la mampara (2 mm policarbonato + 3 mm filtro DIN 11 + 2 mm policarbonato, marco acero inoxidable, raíles con cables/poleas y pistón hidráulico). Card convertida a acordeón con dos items (Composición + Botonera) y zoom sobre el raíl.
+- Sección "Cámaras, PC y software": nuevo acordeón "Cámaras instaladas" con 5 items (Exteriores, Elgato, Gige 1, Gige 2, Soportes Manfrotto/objetivo). Nueva card "PC todo-en-uno" con cuenta `Watchingtheweld@iesremedios.es`. Card "Uso del software" amplía con doble ventana para visualizar las dos GigE.
+- Cards `info-card` colapsables solo en móvil: el `h3` actúa como botón con icono `▾` y atributos a11y (`role="button"`, `tabindex`, `aria-expanded`); soporte de teclado (Enter / Espacio).
+- Limpieza simplify: `.start-back-button` huérfano eliminado, comentarios narrativos quitados, `MediaQueryList` cacheado, exclusión del lightbox para `topbar-logo` y `school-logo`.
+- Reestructuración del menú a 11 botones (eliminada "Conoce los elementos", añadida "Sistema eléctrico"). Nuevo `CONTENT_ORDER`: prevencion, conoce, panel, televisores, camaras, pc, sonido, traslado, soldadura, electrico, mantenimiento. Contenido de elementos redistribuido en los botones correspondientes (televisiones/trampillas a `televisores`, mampara y panel a `panel`, etc.). Cuadro eléctrico encapsulado en la nueva sección `electrico` con paleta ambar (nth-child(11)).
+- Acordeón "Vistas de la cabina" añadido a `conoce` con 4 botones (frontal, lateral derecho, lateral izquierdo, superior).
+- Flechas de acordeón ampliadas: `.accordion-caret` 28 → 40 px, `font-size: 1.9rem`, `font-weight: 900`, amplitud del bounce 4 → 6 px. Caret `h3::after` en móvil 0.95 → 1.7 rem.
+- Sistema de anotaciones en imágenes: nuevo render `renderImageAnnotations` con flecha SVG (línea + punta) en 4 orientaciones (`from: right | left | top | bottom`), longitud configurable vía `length`. Markup `.image-annotated` envuelve `<img>` y `.image-annotations` se superpone como overlay absoluto. Sustituye al diseño anterior dot+pill.
+- Lightbox propaga las anotaciones: el handler clona `.image-annotations` del wrapper origen y aplica `.lightbox-frame-annotated` para que la flecha siga visible al ampliar. Solo se aplica si la imagen no tiene `zoom-mode` activo.
+- Primera anotación: raíl de la mampara (`panel` → Composición → extraImage) en `{x:30, y:50, from:"right", length:90}`. Quitado el `zoom` de esa extraImage porque la flecha ya cumple la función de señalización.
+
+### Sesiones anteriores
 
 - Se añadió un botón `Volver` en las pantallas principales.
 - Se creó un historial interno en `app.js` para volver a la pantalla o apartado anterior.
@@ -36,18 +57,19 @@ La cabina permite realizar demostraciones de soldadura de forma controlada, inte
 - Se añadió `ropa de trabajo` al listado de EPI obligatorio.
 - Las imágenes de contenido se muestran en tamaño más pequeño y se pueden ampliar con toque o pulsación mediante el visor existente.
 - Se reorganizó el orden de botones/apartados manteniendo `Prevención` en primer lugar.
-- Nuevo orden del menú: Prevención, Conoce la cabina, Elementos, Panel frontal y televisiones, Gases, Cámaras/PC/software, Preparar, Demostración, Finalizar, Incidencias, Mantenimiento y Documentación.
+- Nuevo orden del menú (intermedio antes de la reestructuración): Prevención, Conoce la cabina, Elementos, Panel frontal y televisiones, Equipo de soldadura, Cámaras/PC/software, Preparar, Demostración, Finalizar, Incidencias, Mantenimiento y Documentación.
 
 ## Cambios pendientes
 
-- Corregir la codificación de textos que aparecen rotos en `index.html` y algunas partes de la interfaz, por ejemplo `InnovaciÃ³n`, `MenÃº` o `PrevenciÃ³n`.
-- Revisar en navegador real los tamaños finales de botones en móvil y tablet.
-- Confirmar que el botón `Volver` debe mantener historial entre apartados o si debe volver siempre al menú principal desde cualquier apartado.
-- Revisar si el botón `Volver` de la pantalla inicial debe mostrarse desactivado o quedar oculto cuando no haya historial.
-- Revisar el contenido desplegado en móvil para compactar tarjetas demasiado largas si fuese necesario.
-- Completar fotos pendientes de botellas, reguladores, cuadro eléctrico, filtros y documentación técnica.
-- Validar la normativa y referencias legales con documentación oficial vigente antes de usar la app como documento definitivo.
+Detalle de pendientes del profesor en `Pendiente.md`. Resumen vivo:
+
+- Zoom sobre las imágenes con carteles/señales de riesgo (radiación, aplastamiento, etc.) → necesito que el profesor indique en qué foto está cada cartel y dónde.
+- Cards independientes para Ecualizador / Emisora / Micrófonos dentro de Sonido (pendiente decisión: sección propia o ampliar la card existente).
+- Enganches para transporte en camión (pendiente decisión: sección propia "Traslado" o card dentro de Mantenimiento).
+- Fotos pendientes específicas: botellas, reguladores, cuadro eléctrico, filtros, conexionado real cámaras–PC–TV, cada mando individual del panel hidráulico.
+- Validar la normativa y referencias legales con documentación oficial vigente antes de cerrar la versión definitiva.
 - Añadir registro formal de revisiones e incidencias si el centro lo necesita.
+- Corregir mojibake residual en `index.html` y partes de la interfaz si vuelve a aparecer.
 
 ## Aprendizaje para próximas sesiones
 
@@ -71,7 +93,7 @@ La cabina permite realizar demostraciones de soldadura de forma controlada, inte
 
 ## Seguridad ya documentada
 
-- EPI obligatorio: careta de soldadura, guantes de soldador, ropa de trabajo de algodón o tejido ignífugo ajustada y sin elementos sueltos, chaqueta o mandil adecuado, calzado de seguridad y gafas de protección cuando haya preparación, amolado o escoria.
+- EPI obligatorio: pantalla de soldadura, guantes de soldador, ropa de trabajo de algodón o tejido ignífugo ajustada y sin elementos sueltos, chaqueta o mandil adecuado, calzado de seguridad y gafas de protección cuando haya preparación, amolado o escoria.
 - Riesgo por radiación del arco: la mampara/panel DIN 11 debe estar bajado durante cualquier soldadura.
 - Riesgo de humos y gases: la extracción filtrada debe estar encendida antes de cebar el arco y mantenerse funcionando.
 - Riesgo eléctrico: no manipular cuadro eléctrico ni conexiones internas sin autorización.

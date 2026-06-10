@@ -5,26 +5,25 @@ const screens = {
 };
 
 const menuGrid = document.querySelector("#menuGrid");
-const sectionNav = document.querySelector("#sectionNav");
 const sectionTitle = document.querySelector("#sectionTitle");
 const sectionHero = document.querySelector("#sectionHero");
 const sectionContent = document.querySelector("#sectionContent");
 
 let currentSection = "prevencion";
 const navigationHistory = [];
+const mqMobile = window.matchMedia("(max-width: 768px)");
 const CONTENT_ORDER = [
   "prevencion",
   "conoce",
-  "elementos",
   "panel",
-  "gases",
+  "televisores",
   "camaras",
-  "preparar",
-  "demostracion",
-  "finalizar",
-  "incidencias",
-  "mantenimiento",
-  "documentos"
+  "pc",
+  "sonido",
+  "traslado",
+  "soldadura",
+  "electrico",
+  "mantenimiento"
 ];
 
 const WARNING_ICON = '<span class="warning-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><polygon points="12,2 23,22 1,22" fill="#d92d20" stroke="#7a271a" stroke-width="1.5" stroke-linejoin="round"/><rect x="11" y="9" width="2" height="7" fill="#ffffff"/><rect x="11" y="17" width="2" height="2" fill="#ffffff"/></svg></span>';
@@ -131,27 +130,11 @@ function renderMenu() {
         <small>${section.subtitle}</small>
       </button>
       <div class="menu-inline-content" hidden>
-        <div class="section-hero menu-section-hero">
-          <div>
-            <span class="section-tag">${section.tag}</span>
-            <h2>${section.title}</h2>
-            <p>${section.subtitle}</p>
-          </div>
-          <img src="${section.image}" alt="${section.title}" />
-        </div>
         <div class="content-columns menu-content-columns">
           ${section.cards.map(renderCard).join("")}
         </div>
       </div>
     </article>
-  `).join("");
-}
-
-function renderSectionNav() {
-  sectionNav.innerHTML = orderedSections().map((section) => `
-    <button class="${section.id === currentSection ? "active" : ""}" data-section="${section.id}">
-      ${section.title}
-    </button>
   `).join("");
 }
 
@@ -197,12 +180,9 @@ function renderElementsCard(card) {
       ${(item.extraImages || []).map((extra) => `<figure class="element-photo element-photo-extra"><img src="${extra.src}" alt="${extra.alt || item.name}" /><figcaption>${extra.caption || ""}</figcaption></figure>`).join("")}
       <h4>${item.name}</h4>
       <dl>
-        <dt>Funcion</dt>
-        <dd>${item.role}</dd>
-        <dt>Uso</dt>
-        <dd>${item.use}</dd>
-        <dt>Advertencias</dt>
-        <dd>${renderMixedItems(item.warnings)}</dd>
+        ${item.role ? `<dt>Función</dt><dd>${item.role}</dd>` : ""}
+        ${item.use ? `<dt>Uso</dt><dd>${item.use}</dd>` : ""}
+        ${Array.isArray(item.warnings) && item.warnings.length ? `<dt>Advertencias</dt><dd>${renderMixedItems(item.warnings)}</dd>` : ""}
       </dl>
     </div>
   `).join("");
@@ -214,6 +194,93 @@ function renderElementsCard(card) {
         <div class="element-buttons">${buttons}</div>
         <div class="element-details">${details}</div>
       </div>
+    </section>
+  `;
+}
+
+function renderImageAnnotations(annotations) {
+  if (!Array.isArray(annotations) || !annotations.length) return "";
+  const items = annotations.map((a) => {
+    const x = typeof a.x === "number" ? a.x : 50;
+    const y = typeof a.y === "number" ? a.y : 50;
+    const from = a.from || "right";
+    const len = a.length || 80;
+    const label = `<span class="anno-label">${a.label || ""}</span>`;
+    let svg;
+    let parts;
+    if (from === "right" || from === "left") {
+      const tipLeft = from === "right";
+      const x1 = tipLeft ? len : 0;
+      const x2 = tipLeft ? 16 : len - 16;
+      const head = tipLeft ? `0,8 16,2 16,14` : `${len},8 ${len - 16},2 ${len - 16},14`;
+      svg = `<svg class="anno-svg" viewBox="0 0 ${len} 16" width="${len}" height="16" aria-hidden="true"><line x1="${x1}" y1="8" x2="${x2}" y2="8" stroke="#ff4d00" stroke-width="4" stroke-linecap="round"/><polygon points="${head}" fill="#ff4d00"/></svg>`;
+      parts = tipLeft ? svg + label : label + svg;
+    } else {
+      const tipTop = from === "bottom";
+      const y1 = tipTop ? len : 0;
+      const y2 = tipTop ? 16 : len - 16;
+      const head = tipTop ? `8,0 2,16 14,16` : `8,${len} 2,${len - 16} 14,${len - 16}`;
+      svg = `<svg class="anno-svg" viewBox="0 0 16 ${len}" width="16" height="${len}" aria-hidden="true"><line x1="8" y1="${y1}" x2="8" y2="${y2}" stroke="#ff4d00" stroke-width="4" stroke-linecap="round"/><polygon points="${head}" fill="#ff4d00"/></svg>`;
+      parts = tipTop ? svg + label : label + svg;
+    }
+    return `<div class="anno anno-from-${from}" style="left:${x}%;top:${y}%">${parts}</div>`;
+  }).join("");
+  return `<div class="image-annotations" aria-hidden="false">${items}</div>`;
+}
+
+function wrapImageWithAnnotations(imgHtml, annotations) {
+  const anno = renderImageAnnotations(annotations);
+  return anno ? `<div class="image-annotated">${imgHtml}${anno}</div>` : imgHtml;
+}
+
+function renderAccordionCard(card) {
+  const items = card.items.map((item, index) => {
+    const extras = (item.extraImages || []).map((extra) => {
+      const zoom = extra.zoom;
+      if (zoom) {
+        const scale = zoom.scale || 2;
+        const origin = zoom.origin || "50% 50%";
+        const styleAttr = ` style="--zoom-scale:${scale};--zoom-origin:${origin}"`;
+        const imgTag = `<img src="${extra.src}" alt="${extra.alt || item.name}" data-zoom-scale="${scale}" data-zoom-origin="${origin}" />`;
+        return `<figure class="element-photo element-photo-extra element-photo-zoom"${styleAttr}><div class="zoom-frame">${wrapImageWithAnnotations(imgTag, extra.annotations)}</div><figcaption>${extra.caption || ""}</figcaption></figure>`;
+      }
+      const imgTag = `<img src="${extra.src}" alt="${extra.alt || item.name}" />`;
+      return `<figure class="element-photo element-photo-extra">${wrapImageWithAnnotations(imgTag, extra.annotations)}<figcaption>${extra.caption || ""}</figcaption></figure>`;
+    }).join("");
+    const mainPhoto = item.image
+      ? `<figure class="element-photo">${wrapImageWithAnnotations(`<img src="${item.image}" alt="${item.name}" />`, item.annotations)}<figcaption>${item.photo || ""}</figcaption></figure>`
+      : (item.photo ? `<p class="element-photo">${item.photo}</p>` : "");
+    const detailParts = [];
+    if (item.description) {
+      detailParts.push(`<p class="accordion-description">${item.description}</p>`);
+    }
+    if (item.role || item.use || (Array.isArray(item.warnings) && item.warnings.length)) {
+      const dlRows = [];
+      if (item.role) dlRows.push(`<dt>Función</dt><dd>${item.role}</dd>`);
+      if (item.use) dlRows.push(`<dt>Uso</dt><dd>${item.use}</dd>`);
+      if (Array.isArray(item.warnings) && item.warnings.length) dlRows.push(`<dt>Advertencias</dt><dd>${renderMixedItems(item.warnings)}</dd>`);
+      detailParts.push(`<dl>${dlRows.join("")}</dl>`);
+    }
+    return `
+      <article class="accordion-item">
+        <button class="accordion-trigger" data-accordion-toggle="${index}" aria-expanded="false">
+          <span class="accordion-index">${String(index + 1).padStart(2, "0")}</span>
+          <strong>${item.name}</strong>
+          <span class="accordion-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="accordion-panel" hidden>
+          ${mainPhoto}
+          ${extras}
+          ${detailParts.join("")}
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  return `
+    <section class="info-card accordion-card">
+      <h3>${card.title}</h3>
+      <div class="accordion-list">${items}</div>
     </section>
   `;
 }
@@ -253,6 +320,9 @@ function renderOverviewCard(card) {
 function renderCard(card) {
   if (card.type === "elements") {
     return renderElementsCard(card);
+  }
+  if (card.type === "accordion") {
+    return renderAccordionCard(card);
   }
   if (card.type === "overview") {
     return renderOverviewCard(card);
@@ -301,10 +371,13 @@ function renderSection(id, trackHistory = true) {
       <h2>${section.title}</h2>
       <p>${section.subtitle}</p>
     </div>
-    <img src="${section.image}" alt="${section.title}" />
   `;
   sectionContent.innerHTML = section.cards.map(renderCard).join("");
-  renderSectionNav();
+  sectionContent.querySelectorAll(".info-card > h3").forEach((h3) => {
+    h3.setAttribute("role", "button");
+    h3.setAttribute("tabindex", "0");
+    h3.setAttribute("aria-expanded", "false");
+  });
   showScreen("section");
   window.scrollTo(0, 0);
 }
@@ -341,6 +414,26 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const cardTitle = event.target.closest("h3");
+  if (cardTitle && cardTitle.parentElement?.classList.contains("info-card") && mqMobile.matches) {
+    const card = cardTitle.parentElement;
+    const willOpen = !card.classList.contains("open");
+    card.classList.toggle("open", willOpen);
+    cardTitle.setAttribute("aria-expanded", String(willOpen));
+    return;
+  }
+
+  const accordionTrigger = event.target.closest("[data-accordion-toggle]");
+  if (accordionTrigger) {
+    const item = accordionTrigger.closest(".accordion-item");
+    const panel = item.querySelector(".accordion-panel");
+    const willOpen = !item.classList.contains("open");
+    item.classList.toggle("open", willOpen);
+    accordionTrigger.setAttribute("aria-expanded", String(willOpen));
+    panel.hidden = !willOpen;
+    return;
+  }
+
   const menuToggle = event.target.closest("[data-menu-toggle]");
   if (menuToggle) {
     toggleMenuItem(menuToggle.closest(".menu-item"));
@@ -353,28 +446,52 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  // Lightbox Zoom de Imágenes
-  if (event.target.tagName === "IMG" && !event.target.classList.contains("project-logo") && !event.target.classList.contains("school-logo")) {
+  if (event.target.tagName === "IMG" && !event.target.classList.contains("project-logo") && !event.target.classList.contains("school-logo") && !event.target.classList.contains("topbar-logo")) {
     const lightbox = document.getElementById("imageLightbox");
     const lightboxImg = document.getElementById("lightboxImage");
     const lightboxCaption = document.getElementById("lightboxCaption");
-    
+    const lightboxFrame = lightbox ? lightbox.querySelector(".lightbox-frame") : null;
+
     if (lightbox && lightboxImg) {
       lightboxImg.src = event.target.src;
       lightboxImg.alt = event.target.alt;
-      
+
+      const zoomScale = event.target.dataset.zoomScale;
+      const zoomOrigin = event.target.dataset.zoomOrigin;
+      if (zoomScale) {
+        lightbox.classList.add("zoom-mode");
+        lightboxImg.style.setProperty("--zoom-scale", zoomScale);
+        lightboxImg.style.setProperty("--zoom-origin", zoomOrigin || "50% 50%");
+      } else {
+        lightbox.classList.remove("zoom-mode");
+        lightboxImg.style.removeProperty("--zoom-scale");
+        lightboxImg.style.removeProperty("--zoom-origin");
+      }
+
+      if (lightboxFrame) {
+        const previousAnno = lightboxFrame.querySelector(".image-annotations");
+        if (previousAnno) previousAnno.remove();
+        const sourceWrapper = event.target.closest(".image-annotated");
+        const sourceAnno = sourceWrapper ? sourceWrapper.querySelector(".image-annotations") : null;
+        if (sourceAnno && !zoomScale) {
+          lightboxFrame.classList.add("lightbox-frame-annotated");
+          lightboxFrame.appendChild(sourceAnno.cloneNode(true));
+        } else {
+          lightboxFrame.classList.remove("lightbox-frame-annotated");
+        }
+      }
+
       const figure = event.target.closest("figure");
       const figcaption = figure ? figure.querySelector("figcaption") : null;
       if (lightboxCaption) {
         lightboxCaption.textContent = figcaption ? figcaption.textContent : event.target.alt;
       }
-      
+
       lightbox.classList.add("open");
     }
     return;
   }
 
-  // Cerrar Lightbox al hacer clic en fondo o cerrar
   const lightbox = document.getElementById("imageLightbox");
   if (lightbox && lightbox.classList.contains("open")) {
     const isCloseBtn = event.target.classList.contains("lightbox-close");
@@ -385,6 +502,16 @@ document.addEventListener("click", (event) => {
   }
 });
 
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  const cardTitle = event.target.closest?.("h3");
+  if (!cardTitle || !cardTitle.parentElement?.classList.contains("info-card") || !mqMobile.matches) return;
+  event.preventDefault();
+  const card = cardTitle.parentElement;
+  const willOpen = !card.classList.contains("open");
+  card.classList.toggle("open", willOpen);
+  cardTitle.setAttribute("aria-expanded", String(willOpen));
+});
+
 renderMenu();
-renderSectionNav();
 updateBackButtons();
